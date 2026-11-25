@@ -1,0 +1,7 @@
+.venv/
+.models/
+__pycache__/
+*.pyc
+*.tmp
+*.log
+data/french_bakery_daily.csv
