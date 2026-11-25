@@ -95,8 +95,14 @@ def forecast_chart(history, dates, values, target, *, model_history, names, colu
 
     if band_key:
         band = values[band_key]
+        quantiles = list(zip(band["p10"], band["p50"], band["p90"], strict=True))
+        # The polygon returns along the lower edge in reverse date order.
         fig.add_scatter(x=list(dates) + list(dates[::-1]), y=band["p90"] + band["p10"][::-1],
-                        mode="lines", line=dict(width=0), fill="toself", hoverinfo="skip",
+                        mode="lines", line=dict(width=0), fill="toself", hoveron="points",
+                        customdata=quantiles + quantiles[::-1],
+                        hovertemplate=(f"{band_key} 予測帯　P10 %{{customdata[0]:.1f}} 個"
+                                       " · P50（中央値） %{customdata[1]:.1f} 個"
+                                       " · P90 %{customdata[2]:.1f} 個<extra></extra>"),
                         name=f"{band_key} 予測帯（P10–P90）", fillcolor="rgba(94,110,122,.14)")
     line(recent.date, recent.loaf, f"{target}の履歴", "#354750")
     if previous:
